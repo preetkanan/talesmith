@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Talesmith ✨</h1>
+        <p class="tagline">Unleash your imagination - where every prompt becomes a story.</p>
+        
+        <form id="story-form">
+            <textarea id="prompt" rows="5" cols="60" placeholder="Type the beginning of your adventure..." required></textarea><br>
+            <button type="submit">📖 Forge My Tale</button>
+        </form>
+        
+        <h2>Your Story:</h2>
+        <div id="story-output" class="story-box"></div>
+    </div>
+    
+    <script>
+        document.getElementById('story-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: prompt }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('story-output').innerText = data.generated_text;
+            });
+        });
+    </script>
+</body>
+</html>
